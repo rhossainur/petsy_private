@@ -4,8 +4,10 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:petpal/configs/image_picker.dart';
 import 'package:petpal/widgets/custom_image_picker.dart';
 import 'package:petpal/widgets/custom_text_field.dart';
+import 'package:provider/src/provider.dart';
 
 class CreatePost extends StatefulWidget {
   const CreatePost({Key? key}) : super(key: key);
@@ -16,7 +18,13 @@ class CreatePost extends StatefulWidget {
 
 class _CreatePostState extends State<CreatePost> {
   int choice = 0;
-  File? imagePicked1, imagePicked2, imagePicked3, imagePicked4, imagePicked5, imagePicked6;
+  File? imagePicked1,
+      imagePicked2,
+      imagePicked3,
+      imagePicked4,
+      imagePicked5,
+      imagePicked6;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -186,23 +194,136 @@ class _CreatePostState extends State<CreatePost> {
                   height: 20,
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.width/3,
+                  height: MediaQuery.of(context).size.width / 3,
                   child: Row(
-                    children: const [
-                      Expanded(child: CustomImagePicker()),
-                      Expanded(child: CustomImagePicker()),
-                      Expanded(child: CustomImagePicker())
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () async {
+                            await context
+                                .read<ImagePickingService>()
+                                .pickImage();
+                            setState(() {
+                              imagePicked1 = context
+                                  .read<ImagePickingService>()
+                                  .imagePicked;
+                            });
+                          },
+                          child: Card(
+                              child: Container(
+                            child: imagePicked1 != null
+                                ? Image.file(imagePicked1!)
+                                : const Placeholder(),
+                          )),
+                        ),
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () async {
+                            await context
+                                .read<ImagePickingService>()
+                                .pickImage();
+                            setState(() {
+                              imagePicked2 = context
+                                  .read<ImagePickingService>()
+                                  .imagePicked;
+                            });
+                          },
+                          child: Card(
+                              child: Container(
+                            child: imagePicked2 != null
+                                ? Image.file(imagePicked2!)
+                                : const Placeholder(),
+                          )),
+                        ),
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () async {
+                            await context
+                                .read<ImagePickingService>()
+                                .pickImage();
+                            setState(() {
+                              imagePicked3 = context
+                                  .read<ImagePickingService>()
+                                  .imagePicked;
+                            });
+                          },
+                          child: Card(
+                              child: Container(
+                            child: imagePicked3 != null
+                                ? Image.file(imagePicked3!)
+                                : const Placeholder(),
+                          )),
+                        ),
+                      )
                     ],
                   ),
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.width/3,
+                  height: MediaQuery.of(context).size.width / 3,
                   child: Row(
-                    children: const [
-                      Expanded(child: CustomImagePicker()
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () async {
+                            await context
+                                .read<ImagePickingService>()
+                                .pickImage();
+                            setState(() {
+                              imagePicked4 = context
+                                  .read<ImagePickingService>()
+                                  .imagePicked;
+                            });
+                          },
+                          child: Card(
+                              child: Container(
+                            child: imagePicked4 != null
+                                ? Image.file(imagePicked4!)
+                                : const Placeholder(),
+                          )),
+                        ),
                       ),
-                      Expanded(child: CustomImagePicker()),
-                      Expanded(child: CustomImagePicker())
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () async {
+                            await context
+                                .read<ImagePickingService>()
+                                .pickImage();
+                            setState(() {
+                              imagePicked5 = context
+                                  .read<ImagePickingService>()
+                                  .imagePicked;
+                            });
+                          },
+                          child: Card(
+                              child: Container(
+                            child: imagePicked5 != null
+                                ? Image.file(imagePicked5!)
+                                : const Placeholder(),
+                          )),
+                        ),
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () async {
+                            await context
+                                .read<ImagePickingService>()
+                                .pickImage();
+                            setState(() {
+                              imagePicked6 = context
+                                  .read<ImagePickingService>()
+                                  .imagePicked;
+                            });
+                          },
+                          child: Card(
+                              child: Container(
+                            child: imagePicked6 != null
+                                ? Image.file(imagePicked6!)
+                                : const Placeholder(),
+                          )),
+                        ),
+                      )
                     ],
                   ),
                 )
