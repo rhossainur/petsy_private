@@ -12,8 +12,10 @@ class LoginSignup extends StatefulWidget {
 }
 
 class _LoginSignupState extends State<LoginSignup> {
-  AuthService authService=AuthService();
+  AuthService authService = AuthService();
   String? phoneNumber;
+  TextEditingController phoneController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -29,11 +31,12 @@ class _LoginSignupState extends State<LoginSignup> {
               children: [
                 const Image(image: AssetImage('images/login_home.png')),
                 Padding(
-                  padding:  const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                  child:  CustomTextField(
-                    onChanged: (value){
+                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                  child: CustomTextField(
+                    textEditingController: phoneController,
+                    onChanged: (value) {
                       setState(() {
-                        phoneNumber=value;
+                        phoneNumber = value;
                       });
                     },
                     hintText: "Enter Phone Number",
@@ -45,16 +48,18 @@ class _LoginSignupState extends State<LoginSignup> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: ElevatedButton(
-                    onPressed: (){
-                      context.read<AuthService>().verifyNumber(phoneNumber.toString());
+                    onPressed: () {
+                      context
+                          .read<AuthService>()
+                          .verifyNumber(phoneNumber.toString());
                       Navigator.pushNamed(context, route.otpScreenPage);
                     },
                     child: const Text("Send OTP"),
                     style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.all(20),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(7)),
-                        elevation: 0,
+                      padding: const EdgeInsets.all(20),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7)),
+                      elevation: 0,
                     ),
                   ),
                 ),
@@ -82,7 +87,7 @@ class _LoginSignupState extends State<LoginSignup> {
                   children: [
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        shape: const CircleBorder(),
+                          shape: const CircleBorder(),
                           padding: const EdgeInsets.all(0),
                           primary: Colors.transparent,
                           elevation: 0),
@@ -95,12 +100,12 @@ class _LoginSignupState extends State<LoginSignup> {
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        shape: const CircleBorder(),
+                          shape: const CircleBorder(),
                           padding: const EdgeInsets.all(0),
                           primary: Colors.transparent,
                           elevation: 0),
-                      onPressed: () async{
-                       await context.read<AuthService>().googleLogIn();
+                      onPressed: () async {
+                        await context.read<AuthService>().googleLogIn();
                       },
                       child: const Image(
                         image: AssetImage("images/google_logo.png"),

@@ -8,7 +8,9 @@ class CustomTextField extends StatelessWidget {
   final Color? fillColor;
   final List<TextInputFormatter>? inputFormatter;
   final int? maxLines;
-  final Function(String)? onChanged;
+  final void Function(String)? onChanged;
+  final String? Function(String?)? validator;
+  final TextEditingController textEditingController;
 
   const CustomTextField(
       {Key? key,
@@ -17,12 +19,14 @@ class CustomTextField extends StatelessWidget {
       this.textAlign = TextAlign.left,
       this.onChanged,
       this.fillColor,
-      this.inputFormatter, this.maxLines})
+      this.inputFormatter, this.maxLines, this.validator, required this.textEditingController})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
+      controller: textEditingController,
+      validator: validator,
       onChanged: onChanged,
       textAlign: textAlign,
       minLines: 1,
