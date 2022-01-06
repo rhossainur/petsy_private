@@ -42,6 +42,7 @@ dependencies:
   eva_icons_flutter: ^3.0.2
   image_picker: ^0.8.4+4
   cloud_firestore: ^3.1.5
+  flutter_typeahead: ^3.2.4
 
 dev_dependencies:
   flutter_test:

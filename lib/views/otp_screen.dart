@@ -53,13 +53,15 @@ class _OTPScreenState extends State<OTPScreen> {
               CustomElevatedButton(
                   childText: "Submit OTP",
                   onPressed: () async {
-                    var authServiceProvider = Provider.of<AuthService>(context, listen: false);
+                    var authServiceProvider =
+                        Provider.of<AuthService>(context, listen: false);
                     //String vid=context.watch<AuthService>().verificationIdFetched;
-                    print(
-                        "Fetching the vid val : " + authServiceProvider.verificationIdFetched);
-                    await authServiceProvider.otpVerification(authServiceProvider.verificationIdFetched, otp.toString());
+                    print("Fetching the vid val : " +
+                        authServiceProvider.verificationIdFetched);
+                    await authServiceProvider.otpVerification(
+                        authServiceProvider.verificationIdFetched,
+                        otp.toString());
                     Navigator.pop(context);
-
                   })
             ],
           ),

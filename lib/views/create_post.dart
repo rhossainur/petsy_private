@@ -11,7 +11,9 @@ import 'package:petpal/widgets/custom_text_field.dart';
 import 'package:provider/provider.dart';
 
 class CreatePost extends StatefulWidget {
-  const CreatePost({Key? key}) : super(key: key);
+  final String? animal;
+  final String? breed;
+  const CreatePost({Key? key,this.animal,this.breed}) : super(key: key);
 
   @override
   _CreatePostState createState() => _CreatePostState();
@@ -19,7 +21,10 @@ class CreatePost extends StatefulWidget {
 
 class _CreatePostState extends State<CreatePost> {
   final _formKey = GlobalKey<FormState>();
-  int choice = 0;
+  String? postType;
+  String? selectedAnimalStr;
+  String? selectedBreedStr;
+  bool breedNullable=false;
   File? imagePicked1,
       imagePicked2,
       imagePicked3,
@@ -28,7 +33,6 @@ class _CreatePostState extends State<CreatePost> {
       imagePicked6;
   TextEditingController nameController = TextEditingController();
   TextEditingController colorController = TextEditingController();
-  TextEditingController breedController = TextEditingController();
   TextEditingController yearsController = TextEditingController();
   TextEditingController monthsController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -37,7 +41,6 @@ class _CreatePostState extends State<CreatePost> {
   void dispose() {
     nameController.dispose();
     colorController.dispose();
-    breedController.dispose();
     yearsController.dispose();
     monthsController.dispose();
     descriptionController.dispose();
@@ -52,24 +55,28 @@ class _CreatePostState extends State<CreatePost> {
         appBar: AppBar(
           title: const Text("New Post"),
           actions: [
-            FutureBuilder(
-              future:null,
-              builder: (context,snapshot) {
+            Builder(
+              builder: (context) {
                 return TextButton(
                     onPressed: () async{
                       if(_formKey.currentState!.validate()){
                         final user = context.read<AuthService>().getCurrentUser();
                         Post post = Post(name: nameController.text,
                             description: descriptionController.text,
-                            breed: breedController.text,
+                            breed: widget.breed,
                             color: colorController.text,
-                            animal: "Cat",
+                            animal: widget.animal,
                             months: int.parse(monthsController.text),
                             userId: user.uid,
-                            type: choice,
+                            postType: postType,
                             years: int.parse(yearsController.text));
                         FirebaseDataService firebaseDataService = FirebaseDataService();
                         await firebaseDataService.addPost(post);
+                        nameController.clear();
+                        colorController.clear();
+                        yearsController.clear();
+                        monthsController.clear();
+                        descriptionController.clear();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             duration: Duration(seconds: 2),
@@ -127,10 +134,10 @@ class _CreatePostState extends State<CreatePost> {
                             ),
                             onSelected: (bool val) {
                               setState(() {
-                                choice = 1;
+                                postType = "Donor";
                               });
                             },
-                            selected: choice == 1,
+                            selected: postType == "Donor",
                           )),
                       Expanded(
                           child: ChoiceChip(
@@ -140,10 +147,10 @@ class _CreatePostState extends State<CreatePost> {
                             ),
                             onSelected: (bool val) {
                               setState(() {
-                                choice = 2;
+                                postType = "Seller";
                               });
                             },
-                            selected: choice == 2,
+                            selected: postType == "Seller",
                           ))
                     ],
                   ),
@@ -191,28 +198,6 @@ class _CreatePostState extends State<CreatePost> {
                         return null;
                       },
                       hintText: "Add color", textInputType: TextInputType.text),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Text(
-                    "Breed",
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .headline6,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  CustomTextField(
-                      textEditingController: breedController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                        return null;
-                      },
-                      hintText: "Add Breed", textInputType: TextInputType.name),
                   const SizedBox(
                     height: 30,
                   ),

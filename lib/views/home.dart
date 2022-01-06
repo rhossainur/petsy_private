@@ -25,7 +25,7 @@ class _HomeState extends State<Home> {
         ),
         elevation: 20,
         onPressed: () async =>
-            Navigator.of(context).pushNamed(route.createPostPage),
+            Navigator.of(context).pushNamed(route.chooseAnimalAndBreedPage),
       ),
       appBar: AppBar(
         title: const Text("Home"),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:petpal/views/choose_animal_view.dart';
 import 'package:petpal/views/create_post.dart';
 import 'package:petpal/views/driver.dart';
 import 'package:petpal/views/home.dart';
@@ -16,8 +17,10 @@ const String otpScreenPage = "otpScreen";
 const String driverClass = "driver";
 const String postCardViewPage = "postCardView";
 const String createPostPage = "createPost";
+const String chooseAnimalAndBreedPage="chooseAnimalANdBreed";
 
 Route<dynamic> controller(RouteSettings settings) {
+  final arguments=settings.arguments;
   switch (settings.name) {
     case loginSignupPage:
       return MaterialPageRoute(builder: (context) => const LoginSignup());
@@ -34,7 +37,13 @@ Route<dynamic> controller(RouteSettings settings) {
     case postCardViewPage:
       return MaterialPageRoute(builder: (context) => const PostCardView());
     case createPostPage:
+      if(arguments is List){
+        return MaterialPageRoute(builder: (context) => CreatePost(animal: arguments[0],breed: arguments[1],));
+      }
       return MaterialPageRoute(builder: (context) => const CreatePost());
+
+    case chooseAnimalAndBreedPage:
+      return MaterialPageRoute(builder: (context)=> const ChooseAnimalAndBreed());
     default:
       throw ("route error");
   }

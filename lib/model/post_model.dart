@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Post {
-  final int? type;
+  final String? postType;
   final String? animal;
   final String? name;
   final String? color;
@@ -13,7 +13,7 @@ class Post {
 
   Post(
       {@required this.name,
-      @required this.type,
+      @required this.postType,
       @required this.animal,
       @required this.color,
       @required this.breed,
@@ -30,7 +30,7 @@ class Post {
       months: data['months'],
       breed: data['breed'],
       description: data['description'],
-      type: data['type'],
+      postType: data['type'],
       name: data['name']);
 
   Map<String, dynamic> toMap() {
@@ -43,7 +43,7 @@ class Post {
       'breed': breed,
       'description': description,
       'name': name,
-      'type': type
+      'type': postType
     };
   }
 }

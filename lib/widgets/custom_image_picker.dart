@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:petpal/configs/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -25,7 +24,7 @@ class _CustomImagePickerState extends State<CustomImagePicker> {
       },
       child: Card(
         child: Container(
-          child: imagePicked!=null?Image.file(imagePicked!):Placeholder(),
+          child: imagePicked!=null?Image.file(imagePicked!):const Placeholder(),
         )
       ),
     );
