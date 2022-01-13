@@ -1,7 +1,22 @@
 import 'package:flutter/material.dart';
 
 class CustomKeyDetails extends StatelessWidget {
-  const CustomKeyDetails({Key? key}) : super(key: key);
+  final String? name;
+  final String? breed;
+  final int? years;
+  final int? months;
+  final String? description;
+  final String? color;
+
+  const CustomKeyDetails(
+      {Key? key,
+      @required this.name,
+      @required this.breed,
+      @required this.years,
+      @required this.months,
+      @required this.description,
+      @required this.color})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +54,7 @@ class CustomKeyDetails extends StatelessWidget {
                             height: 20,
                           ),
                           Text(
-                            "Bhombol",
+                            name!,
                             style: Theme.of(context).textTheme.subtitle1,
                           )
                         ],
@@ -58,7 +73,7 @@ class CustomKeyDetails extends StatelessWidget {
                             height: 20,
                           ),
                           Text(
-                            "5 years 3 months",
+                            years.toString()+" years, "+months.toString()+" months",
                             style: Theme.of(context).textTheme.subtitle1,
                           )
                         ],
@@ -84,7 +99,7 @@ class CustomKeyDetails extends StatelessWidget {
                             height: 20,
                           ),
                           Text(
-                            "Golden Retriever",
+                            breed!,
                             style: Theme.of(context).textTheme.subtitle1,
                           )
                         ],
@@ -103,7 +118,7 @@ class CustomKeyDetails extends StatelessWidget {
                             height: 20,
                           ),
                           Text(
-                            "Golden",
+                            color!,
                             style: Theme.of(context).textTheme.subtitle1,
                           )
                         ],
@@ -126,7 +141,7 @@ class CustomKeyDetails extends StatelessWidget {
                   height: 20,
                 ),
                 Text(
-                  "The Golden Retriever is one of 🌷🌷the most 🌷popular dog breeds in the 🌷United States. The breed’s friendly, tolerant🌷 attitude makes them great family pets, and their intelligence 🌷 makes them highly capable 🌷 working dogs. Golden Retrievers 🌷 excel at retrieving game for hunters, tracking, 🌷 sniffing out contraband for law enforcement, and as therapy and service dogs. They’re also natural athletes and do well in dog sports such as agility and competitive obedience. These dogs are fairly easy to train and get along in just about any home or family. They’re great with kids and very protective of their humans. If you want a loyal, loving, and smart companion, then you should consider adopting one of these pups into your pack.",
+                  description!,
                   style: Theme.of(context).textTheme.subtitle1,
                 )
               ],

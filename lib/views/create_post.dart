@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,7 +14,8 @@ import 'package:provider/provider.dart';
 class CreatePost extends StatefulWidget {
   final String? animal;
   final String? breed;
-  const CreatePost({Key? key,this.animal,this.breed}) : super(key: key);
+
+  const CreatePost({Key? key, this.animal, this.breed}) : super(key: key);
 
   @override
   _CreatePostState createState() => _CreatePostState();
@@ -24,7 +26,7 @@ class _CreatePostState extends State<CreatePost> {
   String? postType;
   String? selectedAnimalStr;
   String? selectedBreedStr;
-  bool breedNullable=false;
+  bool breedNullable = false;
   File? imagePicked1,
       imagePicked2,
       imagePicked3,
@@ -55,54 +57,82 @@ class _CreatePostState extends State<CreatePost> {
         appBar: AppBar(
           title: const Text("New Post"),
           actions: [
-            Builder(
-              builder: (context) {
-                return TextButton(
-                    onPressed: () async{
-                      if(_formKey.currentState!.validate()){
-                        final user = context.read<AuthService>().getCurrentUser();
-                        Post post = Post(name: nameController.text,
-                            description: descriptionController.text,
-                            breed: widget.breed,
-                            color: colorController.text,
-                            animal: widget.animal,
-                            months: int.parse(monthsController.text),
-                            userId: user.uid,
-                            postType: postType,
-                            years: int.parse(yearsController.text));
-                        FirebaseDataService firebaseDataService = FirebaseDataService();
-                        await firebaseDataService.addPost(post);
-                        nameController.clear();
-                        colorController.clear();
-                        yearsController.clear();
-                        monthsController.clear();
-                        descriptionController.clear();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            duration: Duration(seconds: 2),
-                            content: Text('Post Created Successfully'),
-                          ),
-                        );
+            Builder(builder: (context) {
+              return TextButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate() && postType != null) {
+                      final user = context.read<AuthService>().getCurrentUser();
+                      Post post = Post(
+                          name: nameController.text,
+                          createDateAndTime: Timestamp.now(),
+                          description: descriptionController.text,
+                          breed: widget.breed,
+                          color: colorController.text,
+                          animal: widget.animal,
+                          months: int.parse(monthsController.text),
+                          userId: user.uid,
+                          postType: postType,
+                          years: int.parse(yearsController.text));
+                      FirebaseDataService firebaseDataService =
+                          FirebaseDataService();
+                      await firebaseDataService.addPost(post);
+                      if(imagePicked1!=null){
+                        await context.read<ImagePickingService>().uploadImage(imagePicked1,user.uid,1);
                       }
-
-                    },
-                    style: TextButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20))),
-                    child: Row(
-                      children: const [
-                        Icon(
-                          EvaIcons.paperPlane,
-                          size: 30,
+                      if(imagePicked2!=null){
+                        await context.read<ImagePickingService>().uploadImage(imagePicked2,user.uid,2);
+                      }
+                      if(imagePicked3!=null){
+                        await context.read<ImagePickingService>().uploadImage(imagePicked3,user.uid,3);
+                      }
+                      if(imagePicked4!=null){
+                        await context.read<ImagePickingService>().uploadImage(imagePicked4,user.uid,4);
+                      }
+                      if(imagePicked5!=null){
+                        await context.read<ImagePickingService>().uploadImage(imagePicked5,user.uid,5);
+                      }
+                      if(imagePicked6!=null){
+                        await context.read<ImagePickingService>().uploadImage(imagePicked6,user.uid,6);
+                      }
+                      nameController.clear();
+                      colorController.clear();
+                      yearsController.clear();
+                      monthsController.clear();
+                      descriptionController.clear();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          backgroundColor: Color(0xFF6db784),
+                          duration: Duration(seconds: 2),
+                          content: Text('Post Created Successfully'),
                         ),
-                        SizedBox(
-                          width: 5,
+                      );
+                    } else if (postType == null &&
+                        _formKey.currentState!.validate()) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          backgroundColor: Color(0xFF6db784),
+                          duration: Duration(seconds: 2),
+                          content: Text('Choose a post type'),
                         ),
-                        Text("Post"),
-                      ],
-                    ));
-              }
-            ),
+                      );
+                    }
+                  },
+                  style: TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20))),
+                  child: Row(
+                    children: const [
+                      Icon(
+                        EvaIcons.paperPlane,
+                        size: 30,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text("Post"),
+                    ],
+                  ));
+            }),
           ],
         ),
         body: SingleChildScrollView(
@@ -116,10 +146,7 @@ class _CreatePostState extends State<CreatePost> {
                 children: [
                   Text(
                     "Post Type",
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .headline6,
+                    style: Theme.of(context).textTheme.headline6,
                   ),
                   const SizedBox(
                     height: 20,
@@ -128,30 +155,30 @@ class _CreatePostState extends State<CreatePost> {
                     children: [
                       Expanded(
                           child: ChoiceChip(
-                            label: const Text(
-                              "Donor",
-                              style: TextStyle(fontSize: 17),
-                            ),
-                            onSelected: (bool val) {
-                              setState(() {
-                                postType = "Donor";
-                              });
-                            },
-                            selected: postType == "Donor",
-                          )),
+                        label: const Text(
+                          "Donor",
+                          style: TextStyle(fontSize: 17),
+                        ),
+                        onSelected: (bool val) {
+                          setState(() {
+                            postType = "Donor";
+                          });
+                        },
+                        selected: postType == "Donor",
+                      )),
                       Expanded(
                           child: ChoiceChip(
-                            label: const Text(
-                              "Seller",
-                              style: TextStyle(fontSize: 17),
-                            ),
-                            onSelected: (bool val) {
-                              setState(() {
-                                postType = "Seller";
-                              });
-                            },
-                            selected: postType == "Seller",
-                          ))
+                        label: const Text(
+                          "Seller",
+                          style: TextStyle(fontSize: 17),
+                        ),
+                        onSelected: (bool val) {
+                          setState(() {
+                            postType = "Seller";
+                          });
+                        },
+                        selected: postType == "Seller",
+                      ))
                     ],
                   ),
                   const SizedBox(
@@ -159,10 +186,7 @@ class _CreatePostState extends State<CreatePost> {
                   ),
                   Text(
                     "Name",
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .headline6,
+                    style: Theme.of(context).textTheme.headline6,
                   ),
                   const SizedBox(
                     height: 20,
@@ -175,16 +199,14 @@ class _CreatePostState extends State<CreatePost> {
                         }
                         return null;
                       },
-                      hintText: "Add name", textInputType: TextInputType.name),
+                      hintText: "Add name",
+                      textInputType: TextInputType.name),
                   const SizedBox(
                     height: 30,
                   ),
                   Text(
                     "Color",
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .headline6,
+                    style: Theme.of(context).textTheme.headline6,
                   ),
                   const SizedBox(
                     height: 20,
@@ -197,16 +219,14 @@ class _CreatePostState extends State<CreatePost> {
                         }
                         return null;
                       },
-                      hintText: "Add color", textInputType: TextInputType.text),
+                      hintText: "Add color",
+                      textInputType: TextInputType.text),
                   const SizedBox(
                     height: 30,
                   ),
                   Text(
                     "Age",
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .headline6,
+                    style: Theme.of(context).textTheme.headline6,
                   ),
                   const SizedBox(
                     height: 20,
@@ -215,40 +235,40 @@ class _CreatePostState extends State<CreatePost> {
                     children: [
                       Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.only(right: 10),
-                            child: CustomTextField(
-                              textEditingController: yearsController,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter some text';
-                                }
-                                return null;
-                              },
-                              hintText: "years",
-                              textInputType: TextInputType.number,
-                              inputFormatter: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                            ),
-                          )),
+                        padding: const EdgeInsets.only(right: 10),
+                        child: CustomTextField(
+                          textEditingController: yearsController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter some text';
+                            }
+                            return null;
+                          },
+                          hintText: "years",
+                          textInputType: TextInputType.number,
+                          inputFormatter: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                        ),
+                      )),
                       Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.only(right: 10),
-                            child: CustomTextField(
-                              textEditingController: monthsController,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter some text';
-                                }
-                                return null;
-                              },
-                              hintText: "months",
-                              textInputType: TextInputType.number,
-                              inputFormatter: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                            ),
-                          )),
+                        padding: const EdgeInsets.only(right: 10),
+                        child: CustomTextField(
+                          textEditingController: monthsController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter some text';
+                            }
+                            return null;
+                          },
+                          hintText: "months",
+                          textInputType: TextInputType.number,
+                          inputFormatter: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                        ),
+                      )),
                     ],
                   ),
                   const SizedBox(
@@ -256,10 +276,7 @@ class _CreatePostState extends State<CreatePost> {
                   ),
                   Text(
                     "Description",
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .headline6,
+                    style: Theme.of(context).textTheme.headline6,
                   ),
                   const SizedBox(
                     height: 20,
@@ -281,19 +298,13 @@ class _CreatePostState extends State<CreatePost> {
                   ),
                   Text(
                     "Photos",
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .headline6,
+                    style: Theme.of(context).textTheme.headline6,
                   ),
                   const SizedBox(
                     height: 20,
                   ),
                   SizedBox(
-                    height: MediaQuery
-                        .of(context)
-                        .size
-                        .width / 3,
+                    height: MediaQuery.of(context).size.width / 3,
                     child: Row(
                       children: [
                         Expanded(
@@ -310,10 +321,10 @@ class _CreatePostState extends State<CreatePost> {
                             },
                             child: Card(
                                 child: Container(
-                                  child: imagePicked1 != null
-                                      ? Image.file(imagePicked1!)
-                                      : const Placeholder(),
-                                )),
+                              child: imagePicked1 != null
+                                  ? Image.file(imagePicked1!)
+                                  : const Placeholder(),
+                            )),
                           ),
                         ),
                         Expanded(
@@ -330,10 +341,10 @@ class _CreatePostState extends State<CreatePost> {
                             },
                             child: Card(
                                 child: Container(
-                                  child: imagePicked2 != null
-                                      ? Image.file(imagePicked2!)
-                                      : const Placeholder(),
-                                )),
+                              child: imagePicked2 != null
+                                  ? Image.file(imagePicked2!)
+                                  : const Placeholder(),
+                            )),
                           ),
                         ),
                         Expanded(
@@ -350,20 +361,17 @@ class _CreatePostState extends State<CreatePost> {
                             },
                             child: Card(
                                 child: Container(
-                                  child: imagePicked3 != null
-                                      ? Image.file(imagePicked3!)
-                                      : const Placeholder(),
-                                )),
+                              child: imagePicked3 != null
+                                  ? Image.file(imagePicked3!)
+                                  : const Placeholder(),
+                            )),
                           ),
                         )
                       ],
                     ),
                   ),
                   SizedBox(
-                    height: MediaQuery
-                        .of(context)
-                        .size
-                        .width / 3,
+                    height: MediaQuery.of(context).size.width / 3,
                     child: Row(
                       children: [
                         Expanded(
@@ -380,10 +388,10 @@ class _CreatePostState extends State<CreatePost> {
                             },
                             child: Card(
                                 child: Container(
-                                  child: imagePicked4 != null
-                                      ? Image.file(imagePicked4!)
-                                      : const Placeholder(),
-                                )),
+                              child: imagePicked4 != null
+                                  ? Image.file(imagePicked4!)
+                                  : const Placeholder(),
+                            )),
                           ),
                         ),
                         Expanded(
@@ -400,10 +408,10 @@ class _CreatePostState extends State<CreatePost> {
                             },
                             child: Card(
                                 child: Container(
-                                  child: imagePicked5 != null
-                                      ? Image.file(imagePicked5!)
-                                      : const Placeholder(),
-                                )),
+                              child: imagePicked5 != null
+                                  ? Image.file(imagePicked5!)
+                                  : const Placeholder(),
+                            )),
                           ),
                         ),
                         Expanded(
@@ -420,10 +428,10 @@ class _CreatePostState extends State<CreatePost> {
                             },
                             child: Card(
                                 child: Container(
-                                  child: imagePicked6 != null
-                                      ? Image.file(imagePicked6!)
-                                      : const Placeholder(),
-                                )),
+                              child: imagePicked6 != null
+                                  ? Image.file(imagePicked6!)
+                                  : const Placeholder(),
+                            )),
                           ),
                         )
                       ],

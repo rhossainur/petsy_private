@@ -1,11 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:petpal/configs/auth_service.dart';
+import 'package:petpal/configs/firebase_data_service.dart';
 import 'package:petpal/routes/route.dart' as route;
 import 'package:petpal/widgets/custom_category_card.dart';
 import 'package:petpal/widgets/custom_offer_card.dart';
 import 'package:petpal/widgets/custom_post_card.dart';
 import 'package:provider/provider.dart';
+import 'package:petpal/model/post_model.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -126,13 +129,36 @@ class _HomeState extends State<Home> {
                   style: Theme.of(context).textTheme.headline5,
                 ),
               ),
-              Row(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CustomPostCard(
-                    onPressed: () async =>
-                        Navigator.of(context).pushNamed(route.postCardViewPage),
-                  ),
+                  StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseDataService().postStream(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasError) {
+                        return const Text("Something Went Wrong");
+                      }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Text("Loading...");
+                      }
+                      return ListView(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          children: snapshot.data!.docs
+                              .map((DocumentSnapshot document) {
+                            Post data = document.data()! as Post;
+                            return CustomPostCard(
+                                onPressed: () async => Navigator.of(context)
+                                    .pushNamed(route.postCardViewPage,arguments: [data]),
+                                breed: data.breed,
+                                name: data.name,
+                                years: data.years,
+                                months: data.months,
+                                description: data.description);
+                          }).toList());
+                    },
+                  )
                 ],
               )
             ],
@@ -142,3 +168,21 @@ class _HomeState extends State<Home> {
     );
   }
 }
+
+
+
+// ListView(
+// shrinkWrap: true,
+// physics: const NeverScrollableScrollPhysics(),
+// children: snapshot.data!.docs
+//     .map((DocumentSnapshot document) {
+// Post data = document.data()! as Post;
+// return CustomPostCard(
+// onPressed: () async => Navigator.of(context)
+//     .pushNamed(route.postCardViewPage,arguments: [data]),
+// breed: data.breed,
+// name: data.name,
+// years: data.years,
+// months: data.months,
+// description: data.description);
+// }).toList());

@@ -35,6 +35,9 @@ Route<dynamic> controller(RouteSettings settings) {
     case driverClass:
       return MaterialPageRoute(builder: (context) => const Driver());
     case postCardViewPage:
+      if(arguments is List) {
+        return MaterialPageRoute(builder: (context) => PostCardView(post: arguments[0],));
+      }
       return MaterialPageRoute(builder: (context) => const PostCardView());
     case createPostPage:
       if(arguments is List){

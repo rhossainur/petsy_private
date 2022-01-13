@@ -1,10 +1,13 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:petpal/model/post_model.dart';
 import 'package:petpal/widgets/custom_key_details_card.dart';
 import 'package:petpal/widgets/custom_post_view_footer.dart';
 
 class PostCardView extends StatefulWidget {
-  const PostCardView({Key? key}) : super(key: key);
+  final Post? post;
+
+  const PostCardView({Key? key, this.post}) : super(key: key);
 
   @override
   _PostCardViewState createState() => _PostCardViewState();
@@ -45,9 +48,16 @@ class _PostCardViewState extends State<PostCardView> {
           ),
           SliverToBoxAdapter(
             child: Column(
-              children: const [
-                CustomKeyDetails(),
-                SizedBox(
+              children: [
+                CustomKeyDetails(
+                  breed: widget.post!.breed,
+                  months: widget.post!.months,
+                  color: widget.post!.color,
+                  description: widget.post!.description,
+                  name: widget.post!.name,
+                  years: widget.post!.years,
+                ),
+                const SizedBox(
                   height: 50,
                 )
               ],

@@ -3,9 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:petpal/model/post_model.dart';
 
 class FirebaseDataService extends ChangeNotifier{
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference posts=FirebaseFirestore.instance.collection('posts');
-  final createPostRef = FirebaseFirestore.instance
+  CollectionReference createPostRef = FirebaseFirestore.instance
       .collection('posts')
       .withConverter<Post>(
           fromFirestore: (snapshot, _) => Post.fromMap(snapshot.data()!),
@@ -16,6 +15,10 @@ class FirebaseDataService extends ChangeNotifier{
   Future updateUser() async {}
 
   Future addPost(Post post) async {
-    return posts.add(post.toMap());
+    return createPostRef.add(post);
+  }
+
+  Stream<QuerySnapshot> postStream(){
+    return createPostRef.orderBy('createdDateAndTime',descending: true).snapshots();
   }
 }

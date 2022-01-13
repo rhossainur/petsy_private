@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 
 class CustomPostCard extends StatelessWidget {
   final GestureTapCallback? onPressed;
+  final String? breed;
+  final String? name;
+  final int? years;
+  final int? months;
+  final String? description;
 
-  const CustomPostCard({Key? key,@required this.onPressed}) : super(key: key);
+  const CustomPostCard({Key? key,@required this.onPressed,@required this.breed,@required this.name,@required this.years,@required this.months,@required this.description}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +37,9 @@ class CustomPostCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
                     child: Container(
-                      child: const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text("Golden Retriever"),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(breed!),
                       ),
                       decoration: BoxDecoration(
                           color: Theme.of(context).primaryColor,
@@ -55,8 +60,6 @@ class CustomPostCard extends StatelessWidget {
                   topRight: Radius.circular(10),
                 ),
               ),
-              width: (MediaQuery.of(context).size.width * 2) / 3 +
-                  (MediaQuery.of(context).size.width) / 5,
             ),
             Container(
               height: 120,
@@ -65,8 +68,6 @@ class CustomPostCard extends StatelessWidget {
                     bottomLeft: Radius.circular(10),
                     bottomRight: Radius.circular(10)),
               ),
-              width: (MediaQuery.of(context).size.width * 2) / 3 +
-                  (MediaQuery.of(context).size.width) / 5,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -77,15 +78,15 @@ class CustomPostCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Bhombol",
+                          name!,
                           style: Theme.of(context).textTheme.headline6,
                         ),
                         Container(
                           height: 30,
-                          child: const Center(
+                          child: Center(
                               child: Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text("5 years, 3 months"),
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(years.toString()+" years, "+months.toString()+" months"),
                           )),
                           decoration: BoxDecoration(
                               gradient: const LinearGradient(colors: [
@@ -101,8 +102,10 @@ class CustomPostCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 5),
                     child: Text(
-                      "Bhombol is a golden coloured puppy. Only allowed 80 characters in this line",
+                      description!,
                       style: Theme.of(context).textTheme.subtitle1,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Expanded(

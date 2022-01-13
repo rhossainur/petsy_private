@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Post {
@@ -10,9 +11,11 @@ class Post {
   final int? months;
   final String? description;
   final String? userId;
+  final Timestamp? createDateAndTime;
 
   Post(
       {@required this.name,
+      @required this.createDateAndTime,
       @required this.postType,
       @required this.animal,
       @required this.color,
@@ -24,6 +27,7 @@ class Post {
 
   factory Post.fromMap(Map<String, dynamic> data) => Post(
       userId: data['userId'],
+      createDateAndTime: data['createdDateAndTime'],
       animal: data['animal'],
       color: data['color'],
       years: data['years'],
@@ -43,7 +47,8 @@ class Post {
       'breed': breed,
       'description': description,
       'name': name,
-      'type': postType
+      'type': postType,
+      'createdDateAndTime': createDateAndTime
     };
   }
 }
