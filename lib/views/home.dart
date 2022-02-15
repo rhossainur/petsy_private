@@ -34,16 +34,6 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: const Text("Home"),
         actions: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-            child: IconButton(
-                onPressed: () async {
-                  var authServiceProvider =
-                      Provider.of<AuthService>(context, listen: false);
-                  await authServiceProvider.logOut();
-                },
-                icon: const Icon(EvaIcons.messageSquare)),
-          ),
           IconButton(
             onPressed: (){
               Navigator.of(context).pushNamed(route.userProfilePage);
