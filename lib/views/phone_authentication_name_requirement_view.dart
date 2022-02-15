@@ -72,7 +72,7 @@ class _PhoneAuthenticationNameRequirementState
                     onPressed: () async {
                       String name=phoneAuthNameAddTextController.text.trim();
                       user_model.User? userTemp = user_model.User(
-                          name: phoneAuthNameAddTextController.text,
+                          name: name,
                           email: widget.user.email,
                           phone: widget.user.phone,
                           profileImageUrl: widget.user.profileImageUrl,
