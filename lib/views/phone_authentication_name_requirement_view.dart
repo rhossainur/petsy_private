@@ -49,6 +49,7 @@ class _PhoneAuthenticationNameRequirementState
               var authServiceProvider =
                   Provider.of<AuthService>(context, listen: false);
               await authServiceProvider.logOut();
+              Navigator.of(context).pushNamedAndRemoveUntil(routes.driverClass, (route) => false);
             },
           ),
         ),

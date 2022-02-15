@@ -1,5 +1,6 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:petpal/widgets/custom_alert_dialog.dart';
 
 class UserProfileListOption extends StatelessWidget {
   const UserProfileListOption({Key? key}) : super(key: key);
@@ -46,7 +47,12 @@ class UserProfileListOption extends StatelessWidget {
         ListTile(
           title: const Text("Log out"),
           leading: const Icon(EvaIcons.logOutOutline,size: 30,color: Color(0xFF6db784),),
-          onTap: (){},
+          onTap: (){
+            showDialog(
+              context: context,
+              builder: (context)=>CustomAlertDialog()
+            );
+          },
         ),
       ],
     );
