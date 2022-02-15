@@ -8,9 +8,9 @@ class CustomPostCard extends StatelessWidget {
   final int? years;
   final int? months;
   final String? description;
+  final String? displayImage;
 
-  const CustomPostCard({Key? key,@required this.onPressed,@required this.breed,@required this.name,@required this.years,@required this.months,@required this.description}) : super(key: key);
-
+  const CustomPostCard({Key? key,@required this.onPressed,@required this.breed,@required this.name,@required this.years,@required this.months,@required this.description, this.displayImage}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -51,11 +51,11 @@ class CustomPostCard extends StatelessWidget {
                 ],
               ),
               height: 230,
-              decoration: const BoxDecoration(
+              decoration:  BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage('images/dog_post_test.jpg'),
+                    image:  displayImage==null?const AssetImage('images/dog_post_test.jpg'):NetworkImage(displayImage!) as ImageProvider,
                     fit: BoxFit.cover),
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10),
                   topRight: Radius.circular(10),
                 ),

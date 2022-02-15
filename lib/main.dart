@@ -12,7 +12,7 @@ Future main() async{
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_)=>AuthService()),
-      ChangeNotifierProvider(create: (_)=>ImagePickingService())
+      ChangeNotifierProvider(create: (_)=>ImagePickingService()),
     ],
   child: const MyApp(),));
 

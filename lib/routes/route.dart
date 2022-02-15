@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:petpal/views/choose_animal_view.dart';
 import 'package:petpal/views/create_post.dart';
 import 'package:petpal/views/driver.dart';
@@ -6,6 +7,7 @@ import 'package:petpal/views/home.dart';
 import 'package:petpal/views/login_signup.dart';
 import 'package:petpal/views/others_profile.dart';
 import 'package:petpal/views/otp_screen.dart';
+import 'package:petpal/views/phone_authentication_name_requirement_view.dart';
 import 'package:petpal/views/post_card_view.dart';
 import 'package:petpal/views/user_profile.dart';
 
@@ -17,7 +19,8 @@ const String otpScreenPage = "otpScreen";
 const String driverClass = "driver";
 const String postCardViewPage = "postCardView";
 const String createPostPage = "createPost";
-const String chooseAnimalAndBreedPage="chooseAnimalANdBreed";
+const String chooseAnimalAndBreedPage="chooseAnimalAndBreed";
+const String phoneAuthNameRequirementPage="phoneAuthNameRequirement";
 
 Route<dynamic> controller(RouteSettings settings) {
   final arguments=settings.arguments;
@@ -34,6 +37,9 @@ Route<dynamic> controller(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => const OTPScreen());
     case driverClass:
       return MaterialPageRoute(builder: (context) => const Driver());
+    case phoneAuthNameRequirementPage:
+      List argument = arguments as List;
+      return MaterialPageRoute(builder: (context)=> PhoneAuthenticationNameRequirement(user: argument[0],));
     case postCardViewPage:
       if(arguments is List) {
         return MaterialPageRoute(builder: (context) => PostCardView(post: arguments[0],));

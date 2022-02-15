@@ -7,6 +7,7 @@ import 'package:petpal/routes/route.dart' as route;
 import 'package:petpal/widgets/custom_category_card.dart';
 import 'package:petpal/widgets/custom_offer_card.dart';
 import 'package:petpal/widgets/custom_post_card.dart';
+import 'package:petpal/widgets/custom_progress_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:petpal/model/post_model.dart';
 
@@ -43,9 +44,11 @@ class _HomeState extends State<Home> {
                 },
                 icon: const Icon(EvaIcons.messageSquare)),
           ),
-          const Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 11, 0),
-            child: CircleAvatar(
+          IconButton(
+            onPressed: (){
+              Navigator.of(context).pushNamed(route.userProfilePage);
+            },
+            icon: const CircleAvatar(
               radius: 15,
             ),
           ),
@@ -140,23 +143,31 @@ class _HomeState extends State<Home> {
                         return const Text("Something Went Wrong");
                       }
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Text("Loading...");
+                        return const CustomProgressIndicator();
                       }
-                      return ListView(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          children: snapshot.data!.docs
-                              .map((DocumentSnapshot document) {
-                            Post data = document.data()! as Post;
-                            return CustomPostCard(
-                                onPressed: () async => Navigator.of(context)
-                                    .pushNamed(route.postCardViewPage,arguments: [data]),
-                                breed: data.breed,
-                                name: data.name,
-                                years: data.years,
-                                months: data.months,
-                                description: data.description);
-                          }).toList());
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          DocumentSnapshot document =
+                              snapshot.data!.docs[index];
+                          Post data = document.data()! as Post;
+                          String docId = document.id;
+                          return CustomPostCard(
+                              displayImage: data.photoList != null
+                                  ? data.photoList![0]
+                                  : null,
+                              onPressed: () async => Navigator.of(context)
+                                  .pushNamed(route.postCardViewPage,
+                                      arguments: [data]),
+                              breed: data.breed,
+                              name: data.name,
+                              years: data.years,
+                              months: data.months,
+                              description: data.description);
+                        },
+                      );
                     },
                   )
                 ],
@@ -168,8 +179,6 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
-
 
 // ListView(
 // shrinkWrap: true,
@@ -186,3 +195,26 @@ class _HomeState extends State<Home> {
 // months: data.months,
 // description: data.description);
 // }).toList());
+
+// return CustomPostCard(
+// onPressed: () async => Navigator.of(context)
+// .pushNamed(route.postCardViewPage,arguments: [data]),
+// breed: data.breed,
+// name: data.name,
+// years: data.years,
+// months: data.months,
+// description: data.description);
+
+// snapshot.data!.docs
+//     .map((DocumentSnapshot document) {
+// Post data = document.data()! as Post;
+// String docId=document.id;
+// return CustomPostCard(
+// onPressed: () async => Navigator.of(context)
+//     .pushNamed(route.postCardViewPage,arguments: [data]),
+// breed: data.breed,
+// name: data.name,
+// years: data.years,
+// months: data.months,
+// description: data.description);
+// }).toList();

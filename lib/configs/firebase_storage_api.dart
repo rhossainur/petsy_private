@@ -1,15 +1,18 @@
 import 'dart:io';
-
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 
 class FireStorage{
-  static UploadTask? uploadImage(String destination, File file){
+  Future<String> uploadImage(String destination, File file) async{
     try {
       final imageReference=FirebaseStorage.instance.ref(destination);
-      return imageReference.putFile(file);
+      await imageReference.putFile(file);
+      String downloadUrl= await imageReference.getDownloadURL();
+      print("successful url: "+ downloadUrl);
+      return downloadUrl;
     } on FirebaseException catch (e) {
-      print(e);
+      // ignored, really.
+      return "exception";
     }
   }
-
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -17,6 +18,10 @@ class AuthService with ChangeNotifier {
         profileImageUrl: user.photoURL,
         name: user.displayName,
         phone: user.phoneNumber,
+        lastSignInTime: user.metadata.lastSignInTime,
+        emailVerified: user.emailVerified,
+        creationTime: user.metadata.creationTime,
+        loginMethod: user.providerData[0].providerId,
         email: user.email);
   }
 
@@ -25,6 +30,7 @@ class AuthService with ChangeNotifier {
   Stream<User?>? get user {
     return _firebaseAuth.authStateChanges().map(_userFromFirebase);
   }
+
 
   getCurrentUser() {
     final auth.User? user = _firebaseAuth.currentUser;

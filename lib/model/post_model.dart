@@ -12,6 +12,7 @@ class Post {
   final String? description;
   final String? userId;
   final Timestamp? createDateAndTime;
+  final List? photoList;
 
   Post(
       {@required this.name,
@@ -23,6 +24,7 @@ class Post {
       @required this.years,
       @required this.months,
       @required this.description,
+      @required this.photoList,
       @required this.userId});
 
   factory Post.fromMap(Map<String, dynamic> data) => Post(
@@ -35,6 +37,7 @@ class Post {
       breed: data['breed'],
       description: data['description'],
       postType: data['type'],
+      photoList: data['photoList'],
       name: data['name']);
 
   Map<String, dynamic> toMap() {
@@ -48,7 +51,8 @@ class Post {
       'description': description,
       'name': name,
       'type': postType,
-      'createdDateAndTime': createDateAndTime
+      'createdDateAndTime': createDateAndTime,
+      'photoList':photoList
     };
   }
 }
